@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import "./ConferenceEvent.css";
 import TotalCost from "./TotalCost";
+import { toggleMealSelection } from "./mealsSlice";
+import { incrementAvQuantity, decrementAvQuantity } from "./avSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { incrementQuantity, decrementQuantity } from "./venueSlice";
-import { incrementAvQuantity, decrementAvQuantity } from "./avSlice";
-import { toggleMealSelection } from "./mealsSlice";
 const ConferenceEvent = () => {
     const [showItems, setShowItems] = useState(false);
     const [numberOfPeople, setNumberOfPeople] = useState(1);
@@ -103,9 +103,13 @@ const ConferenceEvent = () => {
                                     <td>${item.cost}</td>
                                     <td>
                                         {item.type === "meals" || item.numberOfPeople
-                                        ?`${item.cost * numberOfPeople}`
+                                        ? ` For ${numberOfPeople} people`
+                                        : item.quantity}
+                                        </td>
+                                        <td>{item.type ==="meals" || item.numberOfPeople
+                                        ? ` ${item.cost * numberOfPeople}`
                                         : `${item.cost * item.quantity}`}
-                                    </td>
+                                        </td>
                                 </tr>
                             ))}
                             </tbody>
@@ -290,7 +294,8 @@ const ConferenceEvent = () => {
                                                 onChange={() => handleMealSelection(index)}
                                                 />
                                                 <label htmlFor={`meal_${index}`}> {item.name} </label>
-                                                </div><div className="meal_cost">${item.cost}</div>
+                                                </div>
+                                                 <div className="meal_cost">${item.cost}</div>
                                                 </div>
                                     ))}
 
@@ -304,7 +309,7 @@ const ConferenceEvent = () => {
                         </div>
                     ) : (
                         <div className="total_amount_detail">
-                            <TotalCost totalCosts={ totalCosts } handleClick={handleToggleItems} ItemsDisplay={() => <ItemsDisplay items={items} />} />
+                            <TotalCost totalCosts={ totalCosts } ItemsDisplay={() => <ItemsDisplay items={items} />} />
                         </div>
                     )
                 }
